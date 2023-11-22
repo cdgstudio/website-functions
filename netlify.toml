@@ -1,0 +1,4 @@
+[[redirects]]
+  from = "/api/format-and-highlight"
+  to = "/.netlify/functions/format-and-highlight"
+  status = 200
