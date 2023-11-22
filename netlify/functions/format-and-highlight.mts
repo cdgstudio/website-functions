@@ -15,6 +15,9 @@ export default async (req: Request, context: Context) => {
   // }
 
   const { source, parser } = await req.json();
+
+  console.log(source);
+
   const formatted = await prettier.format(source, { parser: parser });
   const language = parserToLanguage(parser);
   const highlighted = language ? hljs.highlight(formatted, { language }) : hljs.highlightAuto(formatted);
