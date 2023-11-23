@@ -14,24 +14,45 @@ export default async (req: Request, context: Context) => {
   //   return new Response('Sorry, no access for you.', { status: 401 });
   // }
 
-  const { source, parser } = await req.json();
+  const { source, language } = await req.json();
 
-  console.log(source);
+  let parsed: string = source;
 
-  const formatted = await prettier.format(source, { parser: parser });
-  const language = parserToLanguage(parser);
-  const highlighted = language ? hljs.highlight(formatted, { language }) : hljs.highlightAuto(formatted);
+  const parser = getParserBaseOnLanguage(language);
+  if (parser !== undefined) {
+    parsed = await prettier.format(source, {
+      semi: false,
+      parser: language,
+      singleQuote: true,
+      tabWidth: 2,
+      printWidth: 120,
+      trailingComma: 'all',
+    });
+  }
 
-  return new Response(highlighted.value, {
+  if (language) {
+    parsed = hljs.highlight(parsed, { language }).value;
+  }
+
+  return new Response(parsed, {
     headers: { 'Content-Type': 'text/html' },
   });
 };
 
-function parserToLanguage(parser: string): string {
-  switch (parser) {
+function getParserBaseOnLanguage(language: unknown): prettier.Options['parser'] {
+  switch (language) {
     case 'angular':
+      return 'angular';
+    case 'php': // @ToDo: Install prettier for PHP
+    case 'typescript':
       return 'typescript';
+    case 'html':
+      return 'html';
+    case 'css':
+      return 'css';
+    case 'scss':
+      return 'scss';
     default:
-      return '';
+      return undefined;
   }
 }
