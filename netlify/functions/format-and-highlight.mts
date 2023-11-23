@@ -1,6 +1,6 @@
 import type { Context } from '@netlify/functions';
 import prettier from 'prettier';
-import hljs from 'highlight.js';
+import hljs, { Language } from 'highlight.js';
 
 export default async (req: Request, context: Context) => {
   if (req.method !== 'POST') {
@@ -16,7 +16,11 @@ export default async (req: Request, context: Context) => {
 
   const { source, language } = await req.json();
 
-  let parsed: string = source;
+  if (typeof source !== 'string') {
+    return new Response(source);
+  }
+
+  let parsed = source;
 
   const parser = getParserBaseOnLanguage(language);
   if (parser !== undefined) {
@@ -30,7 +34,7 @@ export default async (req: Request, context: Context) => {
     });
   }
 
-  if (language) {
+  if (isLanguageSupported(language)) {
     parsed = hljs.highlight(parsed, { language }).value;
   }
 
@@ -55,4 +59,16 @@ function getParserBaseOnLanguage(language: unknown): prettier.Options['parser'] 
     default:
       return undefined;
   }
+}
+
+function isLanguageSupported(language: unknown): language is string {
+  if (typeof language !== 'string') {
+    return false;
+  }
+
+  if (language === 'plain') {
+    return false;
+  }
+
+  return true;
 }
