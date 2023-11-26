@@ -1,39 +1,58 @@
-import { format } from '../prettier';
-import { Handler } from '@netlify/functions';
+import type { Context } from '@netlify/functions';
+import prettier from 'prettier';
 
-export const handler: Handler = async (event, context) => {
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 400,
-      body: 'Only POST is supported',
-    };
+export default async (req: Request, context: Context): Promise<Response> => {
+  if (req.method !== 'POST') {
+    return new Response('Only POST is supported', {
+      status: 400,
+    });
   }
 
-  const queryParams = event.queryStringParameters;
-  if (!event.body || !queryParams) {
-    return {
-      statusCode: 400,
-      body: 'ERROR!',
-    };
+  const url = new URL(req.url);
+  const body = await req.text();
+
+  const language = url.searchParams.get('language');
+  if (null === language) {
+    return new Response(`Language is required`, {
+      status: 400,
+    });
   }
 
-  const language = queryParams['language'];
-  if (typeof language !== 'string' || language.length === 0) {
-    return {
-      statusCode: 400,
-      body: 'Language is required',
-    };
-  }
+  const formatted = await format(body, { language });
 
-  const formatted = await format(event.body, {
-    language: queryParams['language'],
-  });
-
-  return {
-    statusCode: 200,
-    body: formatted,
+  return new Response(formatted, {
+    status: 200,
     headers: {
       'Content-Type': 'text/plain',
     },
-  };
+  });
 };
+
+async function format(source: string, options: { language: unknown }) {
+  return await prettier.format(source, {
+    semi: false,
+    parser: getParserBaseOnLanguage(options.language),
+    singleQuote: true,
+    tabWidth: 2,
+    printWidth: 120,
+    trailingComma: 'all',
+  });
+}
+
+function getParserBaseOnLanguage(language: unknown): prettier.Options['parser'] {
+  switch (language) {
+    case 'angular':
+      return 'angular';
+    case 'php': // @ToDo: Install prettier for PHP
+    case 'typescript':
+      return 'typescript';
+    case 'html':
+      return 'html';
+    case 'css':
+      return 'css';
+    case 'scss':
+      return 'scss';
+    default:
+      return undefined;
+  }
+}
