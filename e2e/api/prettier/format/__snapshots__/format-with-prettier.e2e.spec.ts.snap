@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`asd ok 1`] = `
+"UndefinedParserError: No parser and no file path given, couldn't infer a parser.
+     at normalizeFormatOptions (file:///home/adrian/MyCurse/website-functions/.netlify/functions-serve/format-with-prettier/node_modules/prettier/index.mjs:18951:13)
+    at formatWithCursor (file:///home/adrian/MyCurse/website-functions/.netlify/functions-serve/format-with-prettier/node_modules/prettier/index.mjs:20580:52)
+    at file:///home/adrian/MyCurse/website-functions/.netlify/functions-serve/format-with-prettier/node_modules/prettier/index.mjs:23994:12
+    at Object.format2 (file:///home/adrian/MyCurse/website-functions/.netlify/functions-serve/format-with-prettier/node_modules/prettier/index.mjs:23999:25)
+    at format (file:///home/adrian/MyCurse/website-functions/.netlify/functions-serve/format-with-prettier/netlify/functions/netlify/prettier.ts:4:10)
+    at Module.format_with_prettier_default (file:///home/adrian/MyCurse/website-functions/.netlify/functions-serve/format-with-prettier/netlify/functions/netlify/functions/format-with-prettier.mts:20:21)
+    at file:///home/adrian/MyCurse/website-functions/.netlify/functions-serve/format-with-prettier/___netlify-bootstrap.mjs:1847:15"
+`;

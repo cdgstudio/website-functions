@@ -1,6 +1,6 @@
 import type { Context } from '@netlify/functions';
 import prettier from 'prettier';
-import hljs, { Language } from 'highlight.js';
+import hljs from 'highlight.js';
 
 export default async (req: Request, context: Context) => {
   if (req.method !== 'POST') {
