@@ -29,6 +29,14 @@ export default async (req: Request, context: Context): Promise<Response> => {
 };
 
 async function format(source: string, options: { language: unknown }) {
+  const parser = getParserBaseOnLanguage(options.language);
+
+  if (parser === undefined) {
+    console.warn(`Parser not found for ${options.language}`);
+
+    return source;
+  }
+
   return await prettier.format(source, {
     semi: false,
     parser: getParserBaseOnLanguage(options.language),
@@ -47,6 +55,7 @@ function getParserBaseOnLanguage(language: unknown): prettier.Options['parser'] 
     case 'typescript':
       return 'typescript';
     case 'html':
+    case 'xml':
       return 'html';
     case 'css':
       return 'css';

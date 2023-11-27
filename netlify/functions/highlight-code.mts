@@ -30,7 +30,8 @@ export default async (req: Request, context: Context): Promise<Response> => {
 
 function highlight(source: string, opts: { language: string }) {
   if (isLanguageSupported(opts.language)) {
-    return hljs.highlight(source, { language: opts.language }).value;
+    const language = parseLanguageIntoLanguage(opts.language);
+    return hljs.highlight(source, { language: language }).value;
   } else {
     return source;
   }
@@ -46,4 +47,14 @@ function isLanguageSupported(language: unknown): language is string {
   }
 
   return true;
+}
+
+function parseLanguageIntoLanguage(language: string): string {
+  switch (language) {
+    case 'angular': {
+      return 'typescript';
+    }
+    default:
+      return language;
+  }
 }

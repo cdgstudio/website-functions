@@ -1,6 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`/api/code/format should format the code 1`] = `
+exports[`/api/code/format should format XML code 1`] = `
+"<button appTooltip="Hello from string">Tooltip as string</button>
+
+<svg [appTooltip]="templateForTooltip">
+  <!-- ... -->
+</svg>
+<ng-template #templateForTooltip> <strong>Hello</strong> from template </ng-template>
+"
+`;
+
+exports[`/api/code/format should format typescript code 1`] = `
 "class A {
   constructor() {}
 }
