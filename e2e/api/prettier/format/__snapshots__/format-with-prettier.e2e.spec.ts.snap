@@ -10,6 +10,22 @@ exports[`/api/code/format should format XML code 1`] = `
 "
 `;
 
+exports[`/api/code/format should format angular component 1`] = `
+"import { Component } from '@angular/core';
+import { of, combineLatest, map } from 'rxjs';
+
+@Component({
+  template: \` <ng-container *ngIf="show$ | async"> ... </ng-container> \`,
+})
+export class ExampleComponent {
+  private pet$ = of(true);
+  private cat$ = of(false);
+
+  show$ = combineLatest([this.pet$, this.cat$]).pipe(map(([pet, cat]) => pet && !cat));
+}
+"
+`;
+
 exports[`/api/code/format should format typescript code 1`] = `
 "class A {
   constructor() {}

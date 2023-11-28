@@ -37,4 +37,30 @@ describe('/api/code/format', () => {
 
     expect(text).toMatchSnapshot();
   });
+
+  it('should format angular component', async () => {
+    const query = new URLSearchParams({
+      language: 'angular',
+    });
+
+    const response = await fetch(new URL(`http://localhost:8888/api/code/format?${query}`), {
+      method: 'POST',
+      body: `import { Component } from '@angular/core';
+      import { of, combineLatest,
+         map } from 'rxjs';
+      
+      @Component({
+        template: \` <ng-container *ngIf="show$ | async"> ... </ng-container> \`,
+      })
+      export class ExampleComponent {
+        private pet$ = of(true); private cat$ = of(false);
+      
+        show$ = combineLatest([this.pet$, this.cat$]).pipe(map(([pet, cat]) => pet && !cat));
+      }`,
+    });
+
+    const text = await response.text();
+
+    expect(text).toMatchSnapshot();
+  });
 });
