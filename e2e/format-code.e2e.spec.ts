@@ -30,7 +30,8 @@ describe('/api/code/format', () => {
       <svg [appTooltip]="templateForTooltip" >
         <!-- ... -->
       </svg>
-      <ng-template #templateForTooltip> <strong>Hello</strong> from template </ng-template>`,
+      <ng-template
+       #templateForTooltip> <strong>Hello</strong> from template </ng-template>`,
     });
 
     const text = await response.text();

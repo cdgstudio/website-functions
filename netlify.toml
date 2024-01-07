@@ -5,5 +5,11 @@
 
 [[redirects]]
   from = "/api/code/format"
-  to = "/.netlify/functions/format-with-prettier"
+  to = "/.netlify/functions/format-code"
+  status = 200
+
+
+[[redirects]]
+  from = "/api/code/format-and-highlight"
+  to = "/.netlify/functions/format-and-highlight-code"
   status = 200

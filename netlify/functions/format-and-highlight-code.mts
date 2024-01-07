@@ -1,5 +1,6 @@
 import { Context } from '@netlify/functions';
 import { highlight } from '../utils/highlight.mjs';
+import { format } from '../utils/format.mjs';
 
 export default async (req: Request, context: Context): Promise<Response> => {
   if (req.method !== 'POST') {
@@ -18,7 +19,8 @@ export default async (req: Request, context: Context): Promise<Response> => {
     });
   }
 
-  const highlighted = highlight(body, { language });
+  const formatted = await format(body, { language });
+  const highlighted = highlight(formatted, { language });
 
   return new Response(highlighted, {
     status: 200,
