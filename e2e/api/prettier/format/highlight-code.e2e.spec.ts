@@ -8,9 +8,22 @@ describe('/api/code/highlight', () => {
 
     const response = await fetch(new URL(`http://localhost:8888/api/code/highlight?${query}`), {
       method: 'POST',
-      body: `class A {
-        constructor() {}
-      }`,
+      body: `it('should not call "loadItems" action when the status is LOADED', async () => {
+        const { actions$, injector, mockToDoApi, mockStore } = createContext();
+      
+        mockStore.setState({ task: { status: 'LOADED', tasks: [] } });
+      
+        await runInInjectionContext(injector, async () => {
+          const effect = TasksEffects.loadTasks();
+      
+          const resultPromise = firstValueFrom(effect, { defaultValue: 'END' });
+          actions$.next(ToDoActions.loadTasks);
+          actions$.complete();
+      
+          expect(await resultPromise).toEqual('END');
+          expect(mockToDoApi.getTasks).toHaveBeenCalledTimes(0);
+        });
+      });`,
     });
 
     const text = await response.text();

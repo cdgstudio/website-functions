@@ -1,7 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`/api/code/highlight should highlight the code 1`] = `
-"<span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> {
-        <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) {}
-      }"
+"<span class="hljs-title function_">it</span>(<span class="hljs-string">&#x27;should not call &quot;loadItems&quot; action when the status is LOADED&#x27;</span>, <span class="hljs-keyword">async</span> () =&gt; {
+        <span class="hljs-keyword">const</span> { actions$, injector, mockToDoApi, mockStore } = <span class="hljs-title function_">createContext</span>();
+      
+        mockStore.<span class="hljs-title function_">setState</span>({ <span class="hljs-attr">task</span>: { <span class="hljs-attr">status</span>: <span class="hljs-string">&#x27;LOADED&#x27;</span>, <span class="hljs-attr">tasks</span>: [] } });
+      
+        <span class="hljs-keyword">await</span> <span class="hljs-title function_">runInInjectionContext</span>(injector, <span class="hljs-keyword">async</span> () =&gt; {
+          <span class="hljs-keyword">const</span> effect = <span class="hljs-title class_">TasksEffects</span>.<span class="hljs-title function_">loadTasks</span>();
+      
+          <span class="hljs-keyword">const</span> resultPromise = <span class="hljs-title function_">firstValueFrom</span>(effect, { <span class="hljs-attr">defaultValue</span>: <span class="hljs-string">&#x27;END&#x27;</span> });
+          actions$.<span class="hljs-title function_">next</span>(<span class="hljs-title class_">ToDoActions</span>.<span class="hljs-property">loadTasks</span>);
+          actions$.<span class="hljs-title function_">complete</span>();
+      
+          <span class="hljs-title function_">expect</span>(<span class="hljs-keyword">await</span> resultPromise).<span class="hljs-title function_">toEqual</span>(<span class="hljs-string">&#x27;END&#x27;</span>);
+          <span class="hljs-title function_">expect</span>(mockToDoApi.<span class="hljs-property">getTasks</span>).<span class="hljs-title function_">toHaveBeenCalledTimes</span>(<span class="hljs-number">0</span>);
+        });
+      });"
 `;
