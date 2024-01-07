@@ -34,4 +34,19 @@ describe('/api/code/highlight', () => {
 
     expect(text).toMatchSnapshot();
   });
+
+  it('should return 400 when code is invalid', async () => {
+    const query = new URLSearchParams({
+      language: 'typescript',
+    });
+
+    const response = await fetch(new URL(`http://localhost:8888/api/code/format-and-highlight?${query}`), {
+      method: 'POST',
+      body: `error class A{
+        constructor()  {  }
+        }`,
+    });
+
+    expect(response.status).toEqual(400);
+  });
 });

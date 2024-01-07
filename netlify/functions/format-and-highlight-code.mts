@@ -19,13 +19,22 @@ export default async (req: Request, context: Context): Promise<Response> => {
     });
   }
 
-  const formatted = await format(body, { language });
-  const highlighted = highlight(formatted, { language });
+  try {
+    const formatted = await format(body, { language });
+    const highlighted = highlight(formatted, { language });
 
-  return new Response(highlighted, {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/html',
-    },
-  });
+    return new Response(highlighted, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html',
+      },
+    });
+  } catch (e) {
+    return new Response(body, {
+      status: 400,
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+    });
+  }
 };

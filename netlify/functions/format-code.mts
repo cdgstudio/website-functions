@@ -18,12 +18,21 @@ export default async (req: Request, context: Context): Promise<Response> => {
     });
   }
 
-  const formatted = await format(body, { language });
+  try {
+    const formatted = await format(body, { language });
 
-  return new Response(formatted, {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/plain',
-    },
-  });
+    return new Response(formatted, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+    });
+  } catch (e) {
+    return new Response(body, {
+      status: 400,
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+    });
+  }
 };

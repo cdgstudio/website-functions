@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, fit, it } from '@jest/globals';
 
 describe('/api/code/format', () => {
   it('should format typescript code', async () => {
@@ -63,5 +63,20 @@ describe('/api/code/format', () => {
     const text = await response.text();
 
     expect(text).toMatchSnapshot();
+  });
+
+  it('should return 400 when code is invalid', async () => {
+    const query = new URLSearchParams({
+      language: 'typescript',
+    });
+
+    const response = await fetch(new URL(`http://localhost:8888/api/code/format?${query}`), {
+      method: 'POST',
+      body: `error class A{
+        constructor()  {  }
+        }`,
+    });
+
+    expect(response.status).toEqual(400);
   });
 });
